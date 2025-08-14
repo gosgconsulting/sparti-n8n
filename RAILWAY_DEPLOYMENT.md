@@ -242,20 +242,25 @@ Configure scaling in Railway dashboard:
 
 ### Common Issues
 
-1. **Service Connection Issues**
-   - Verify internal DNS names
-   - Check environment variables
-   - Review service logs
+1. **Docker Build Errors**
+   - If you encounter `mkdir` permission errors, ensure the Dockerfile uses `USER root` for setup
+   - The provided Dockerfiles have been optimized to avoid common permission issues
+   - Use `--chown` flag when copying files to set proper ownership
 
-2. **Ollama Model Download**
-   - First startup takes time to download models
-   - Check logs for download progress
-   - Ensure sufficient disk space
+2. **Service Connection Issues**
+   - Verify internal DNS names (*.railway.internal)
+   - Check environment variables in Railway dashboard
+   - Review service logs for connection errors
 
-3. **n8n Database Connection**
-   - Verify PostgreSQL credentials
-   - Check database URL format
-   - Ensure database service is running
+3. **Ollama Model Download**
+   - First startup takes 5-10 minutes to download models
+   - Check logs for download progress: `railway logs --service ollama`
+   - Ensure sufficient disk space (20GB+ recommended)
+
+4. **n8n Database Connection**
+   - Verify PostgreSQL credentials match between services
+   - Check database URL format in environment variables
+   - Ensure database service is running and healthy
 
 ### Support
 
