@@ -152,6 +152,8 @@ Use this checklist to ensure a successful deployment of sparti-n8n to Railway.co
 - [ ] View logs: `railway logs --service <service-name>`
 - [ ] Access shell: `railway shell --service <service-name>`
 - [ ] Test connectivity: `ping service.railway.internal`
+- [ ] Check container logs for "Command not found" errors
+- [ ] Verify Dockerfile doesn't override default entrypoint
 
 ## Sign-off ✅
 

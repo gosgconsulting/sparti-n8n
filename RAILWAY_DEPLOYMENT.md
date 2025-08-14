@@ -242,9 +242,10 @@ Configure scaling in Railway dashboard:
 
 ### Common Issues
 
-1. **Docker Build Errors**
+1. **Docker Build and Runtime Errors**
    - If you encounter `mkdir` permission errors, ensure the Dockerfile uses `USER root` for setup
-   - The provided Dockerfiles have been optimized to avoid common permission issues
+   - If you see "Command 'n8n' not found", ensure you're using the default entrypoint (don't override CMD)
+   - The provided Dockerfiles have been optimized to avoid common permission and entrypoint issues
    - Use `--chown` flag when copying files to set proper ownership
 
 2. **Service Connection Issues**

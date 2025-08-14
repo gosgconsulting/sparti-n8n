@@ -32,5 +32,5 @@ ENV NODE_ENV=production \
     N8N_PROTOCOL=http \
     WEBHOOK_URL=
 
-# Start n8n
-CMD ["n8n", "start"]
+# Use the default n8n entrypoint (don't override CMD)
+# The base image uses: ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
