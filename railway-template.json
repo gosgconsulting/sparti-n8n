@@ -1,0 +1,115 @@
+{
+  "name": "sparti-n8n",
+  "description": "Self-hosted AI Starter Kit with n8n, Ollama, Qdrant, and PostgreSQL",
+  "tags": ["ai", "automation", "workflow", "llm", "vector-database"],
+  "repository": "https://github.com/your-username/sparti-n8n",
+  "services": [
+    {
+      "name": "postgres",
+      "type": "database",
+      "databaseType": "postgresql",
+      "plan": "hobby"
+    },
+    {
+      "name": "n8n",
+      "type": "web",
+      "source": {
+        "type": "repo",
+        "dockerfile": "Dockerfile.n8n"
+      },
+      "variables": {
+        "N8N_HOST": "0.0.0.0",
+        "N8N_PORT": "5678",
+        "N8N_PROTOCOL": "http",
+        "DB_TYPE": "postgresdb",
+        "DB_POSTGRESDB_HOST": "postgres.railway.internal",
+        "DB_POSTGRESDB_PORT": "5432",
+        "DB_POSTGRESDB_USER": "${{Postgres.PGUSER}}",
+        "DB_POSTGRESDB_PASSWORD": "${{Postgres.PGPASSWORD}}",
+        "DB_POSTGRESDB_DATABASE": "${{Postgres.PGDATABASE}}",
+        "OLLAMA_HOST": "ollama.railway.internal:11434",
+        "N8N_DIAGNOSTICS_ENABLED": "false",
+        "N8N_PERSONALIZATION_ENABLED": "false",
+        "WEBHOOK_URL": "https://${{RAILWAY_STATIC_URL}}"
+      },
+      "healthcheck": {
+        "path": "/healthz",
+        "interval": 30,
+        "timeout": 10
+      },
+      "dependencies": ["postgres", "ollama", "qdrant"]
+    },
+    {
+      "name": "ollama",
+      "type": "worker",
+      "source": {
+        "type": "repo",
+        "dockerfile": "Dockerfile.ollama"
+      },
+      "variables": {
+        "OLLAMA_HOST": "0.0.0.0:11434",
+        "OLLAMA_KEEP_ALIVE": "24h"
+      },
+      "resources": {
+        "memory": "4Gi",
+        "cpu": "2000m"
+      },
+      "volumes": [
+        {
+          "name": "ollama-models",
+          "mountPath": "/root/.ollama",
+          "size": "20Gi"
+        }
+      ]
+    },
+    {
+      "name": "qdrant",
+      "type": "worker",
+      "source": {
+        "type": "repo",
+        "dockerfile": "Dockerfile.qdrant"
+      },
+      "variables": {
+        "QDRANT__SERVICE__HTTP_PORT": "6333",
+        "QDRANT__SERVICE__HOST": "0.0.0.0"
+      },
+      "volumes": [
+        {
+          "name": "qdrant-storage",
+          "mountPath": "/qdrant/storage",
+          "size": "10Gi"
+        }
+      ]
+    }
+  ],
+  "env": [
+    {
+      "name": "N8N_ENCRYPTION_KEY",
+      "description": "Encryption key for n8n (32 characters)",
+      "generate": true
+    },
+    {
+      "name": "N8N_USER_MANAGEMENT_JWT_SECRET",
+      "description": "JWT secret for n8n user management",
+      "generate": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "n8n-data",
+      "size": "10Gi"
+    },
+    {
+      "name": "ollama-models", 
+      "size": "20Gi"
+    },
+    {
+      "name": "qdrant-storage",
+      "size": "10Gi"
+    },
+    {
+      "name": "shared-data",
+      "size": "5Gi"
+    }
+  ]
+}

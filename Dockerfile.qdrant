@@ -1,0 +1,19 @@
+# Dockerfile for Qdrant service optimized for Railway deployment
+FROM qdrant/qdrant:latest
+
+# Create necessary directories
+RUN mkdir -p /qdrant/storage
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:6333/health || exit 1
+
+# Expose port
+EXPOSE 6333
+
+# Set environment variables for production
+ENV QDRANT__SERVICE__HTTP_PORT=6333
+ENV QDRANT__SERVICE__HOST=0.0.0.0
+
+# Use the default qdrant entrypoint
+CMD ["./qdrant"]

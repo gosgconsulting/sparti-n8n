@@ -1,0 +1,57 @@
+# Railway services configuration
+# This file defines the service structure for Railway deployment
+
+services:
+  postgres:
+    type: database
+    engine: postgresql
+    version: "16"
+    
+  n8n:
+    type: web
+    dockerfile: Dockerfile.n8n
+    port: 5678
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres.railway.internal
+      - DB_POSTGRESDB_PORT=5432
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+    depends_on:
+      - postgres
+      - ollama
+      - qdrant
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - shared_data:/data/shared
+    
+  ollama:
+    type: worker
+    dockerfile: Dockerfile.ollama
+    port: 11434
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_KEEP_ALIVE=24h
+    volumes:
+      - ollama_models:/root/.ollama
+    
+  qdrant:
+    type: worker  
+    dockerfile: Dockerfile.qdrant
+    port: 6333
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__HOST=0.0.0.0
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  n8n_data:
+    size: 10GB
+  ollama_models:
+    size: 20GB
+  qdrant_data:
+    size: 10GB
+  shared_data:
+    size: 5GB

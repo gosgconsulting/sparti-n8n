@@ -1,0 +1,36 @@
+# Dockerfile for Ollama service optimized for Railway deployment
+FROM ollama/ollama:latest
+
+# Create necessary directories and set permissions
+RUN mkdir -p /root/.ollama
+
+# Health check script
+RUN echo '#!/bin/sh\ncurl -f http://localhost:11434/api/tags || exit 1' > /healthcheck.sh && \
+    chmod +x /healthcheck.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD /healthcheck.sh
+
+# Expose port
+EXPOSE 11434
+
+# Set environment variables
+ENV OLLAMA_HOST=0.0.0.0:11434
+ENV OLLAMA_KEEP_ALIVE=24h
+
+# Create entrypoint script that starts ollama and pulls llama3.2
+RUN echo '#!/bin/sh\n\
+# Start ollama in background\n\
+ollama serve &\n\
+\n\
+# Wait for ollama to be ready\n\
+sleep 10\n\
+\n\
+# Pull llama3.2 model\n\
+ollama pull llama3.2\n\
+\n\
+# Keep the service running\n\
+wait' > /entrypoint.sh && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

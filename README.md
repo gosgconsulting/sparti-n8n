@@ -35,6 +35,23 @@ Engineering world, handles large amounts of data safely.
 
 ⭐️ **Private Financial Document Analysis** at minimal cost
 
+## 🚀 Railway.com Deployment
+
+**New!** Deploy sparti-n8n to Railway.com with one click:
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/sparti-n8n)
+
+### Quick Railway Deployment
+
+1. **One-Click Deploy**: Use the button above for instant deployment
+2. **Manual Setup**: See [Railway Deployment Guide](RAILWAY_DEPLOYMENT.md)
+3. **Local Testing**: Use `docker-compose.railway.yml` for development
+
+For detailed Railway deployment instructions, see:
+- 📖 [Railway Deployment Guide](RAILWAY_DEPLOYMENT.md) - Complete deployment walkthrough
+- 📋 [Railway README](README-RAILWAY.md) - Quick start and overview
+- ✅ [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Ensure successful deployment
+
 ## Installation
 
 ### Cloning the Repository
